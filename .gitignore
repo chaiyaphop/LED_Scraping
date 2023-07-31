@@ -1,3 +1,5 @@
 # ignore files
+## Archive folder
 archive
+## Output files
 *.xlsx
