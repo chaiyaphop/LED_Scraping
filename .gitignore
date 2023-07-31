@@ -1,5 +1,8 @@
-# ignore files
-## Archive folder
-archive
+# Ignore files
 ## Output files
 *.xlsx
+## README.md for internal using
+MY_README.md
+## Archive folder
+archive
+
