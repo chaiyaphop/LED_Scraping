@@ -1,6 +1,7 @@
 from datetime import date
 from datetime import datetime
 from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 import pandas as pd
 import time
@@ -11,7 +12,11 @@ def find_n_page(civils):
     options = webdriver.ChromeOptions()
     options.add_argument('--headless')
     options.add_argument('--disable-gpu')
-    driver = webdriver.Chrome(options=options)
+    # chrome_service = Service('C:\Users\CJ\Projects\led_scraping\chromedriver\chromedriver.exe')
+    driver = webdriver.Chrome(
+        # service=chrome_service,
+        options=options
+    )
 
     # Find the number of page
     n_page = {}
