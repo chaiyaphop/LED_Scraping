@@ -2,7 +2,7 @@
 LED_Scraping is a program to extract data from Legal Execution Department's website in Python.
 
 ## Requirements
-LED_Scraping requires Chrome version 120.0.6099.130, Python3.11.3 and Anaconda Virtual Environment (env.yml) or all those packages in requirements file (requirements.txt).
+LED_Scraping requires Google Chrome 120.0.6099.130, Python 3.11.3 and Anaconda Virtual Environment (env.yml) or all those packages in requirements file (requirements.txt).
 
 ## Using LED_Scraping
 - Install Anaconda Virtual Environment (env.yml) or all those packages in requirements file (requirements.txt).
