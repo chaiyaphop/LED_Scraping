@@ -1,7 +1,6 @@
-from datetime import date
-from datetime import datetime
+from datetime import date, datetime
 from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
+# from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 import pandas as pd
 import time
@@ -12,11 +11,9 @@ def find_n_page(civils):
     options = webdriver.ChromeOptions()
     options.add_argument('--headless')
     options.add_argument('--disable-gpu')
-    # chrome_service = Service('C:\Users\CJ\Projects\led_scraping\chromedriver\chromedriver.exe')
     driver = webdriver.Chrome(
-        # service=chrome_service,
-        options=options
-    )
+            options=options
+        )
 
     # Find the number of page
     n_page = {}
@@ -30,12 +27,14 @@ def find_n_page(civils):
     driver.quit()
     return n_page
 
-def scrape_data(n_page):
+def scrape_data(n_page, output_dir, output_filename):
     # Set up the Chrome driver
     options = webdriver.ChromeOptions()
     options.add_argument('--headless')
     options.add_argument('--disable-gpu')
-    driver = webdriver.Chrome(options=options)
+    driver = webdriver.Chrome(
+            options=options
+        )
 
     # Scrape data
     data_dict = {}
@@ -112,13 +111,13 @@ def scrape_data(n_page):
         data_dict[c] = data_list
 
     # Write result file
-    dt = date.today().strftime('%Y%m%d')
-    with pd.ExcelWriter(f'output\LED_SCRAPING_{dt}.xlsx') as writer:
+    with pd.ExcelWriter(f'{output_dir}\{output_filename}') as writer:
         for data in data_dict:
             df = pd.DataFrame(data_dict[data])
             df.to_excel(writer, sheet_name=f'CIVIL_{data}', index=False)
 
     driver.quit()
+    return data_dict
 
 
 if __name__ == '__main__':
@@ -135,11 +134,15 @@ if __name__ == '__main__':
             selected_civil.append(int(civil))
     print(f'Civil {selected_civil}')
 
-    # Find number of page
+    # Define variables
+    output_dir = 'Projects\led_scraping\output'
+    gen_date = (datetime.now()).strftime('%Y%m%d')
+    output_filename = f'LED_SCRAPING_{gen_date}.xlsx'
+    # # Find number of page
     n_page = find_n_page(selected_civil)
 
     # Scrape data
-    scrape_data(n_page)
+    _ = scrape_data(n_page, output_dir, output_filename)
 
     end_time = datetime.now()
     print('Program end at : ', end_time)
