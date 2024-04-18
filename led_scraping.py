@@ -111,7 +111,7 @@ def scrape_data(n_page, output_dir, output_filename):
         data_dict[c] = data_list
 
     # Write result file
-    with pd.ExcelWriter(f'{output_dir}\{output_filename}') as writer:
+    with pd.ExcelWriter(f'{output_dir}/{output_filename}') as writer:
         for data in data_dict:
             df = pd.DataFrame(data_dict[data])
             df.to_excel(writer, sheet_name=f'CIVIL_{data}', index=False)
@@ -135,7 +135,7 @@ if __name__ == '__main__':
     print(f'Civil {selected_civil}')
 
     # Define variables
-    output_dir = 'Projects\led_scraping\output'
+    output_dir = 'Projects/led_scraping/output'
     gen_date = (datetime.now()).strftime('%Y%m%d')
     output_filename = f'LED_SCRAPING_{gen_date}.xlsx'
     # # Find number of page
