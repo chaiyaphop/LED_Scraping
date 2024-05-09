@@ -157,7 +157,6 @@ if __name__ == '__main__':
         print(f'Civil {civils}')
         url = f'{prefix}?search_asset_type_id={asset_type_id}&search_province={province_code}'
         urls.append(url)
-    print(urls)
 
     # Find number of page
     n_page = find_n_page(urls, civils)
