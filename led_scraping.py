@@ -166,7 +166,7 @@ if __name__ == '__main__':
     # # Define variables
     output_dir = 'Projects/led_scraping/output'
     gen_date = (datetime.now()).strftime('%Y%m%d')
-    output_filename = f'LED_{province}_{asset_type_id}_SCRAPING_{gen_date}.xlsx'
+    output_filename = f'LED_SCRAPING_{province}_{asset_type_id}_{gen_date}.xlsx'
 
     _ = scrape_data(urls, n_page, output_dir, output_filename)
 
