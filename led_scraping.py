@@ -127,8 +127,8 @@ if __name__ == '__main__':
 
     # Define variables
     prefix = 'https://asset.led.go.th/newbid-old/asset_search_province.asp'
-    asset_type_id = input('(str) Which asset type id do you want to scrape? 002 = ห้องชุด, 003 = ที่ดินพร้อมสิ่งปลูกสร้าง ')
-    province = input('(str) Which province do you want to scrape? bkk = กรุงเทพ, spk = สมุทรปราการ, pte = ปทุมธานี')
+    asset_type_id = input('(str) Which asset type id do you want to scrape? 002 = ห้องชุด, 003 = ที่ดินพร้อมสิ่งปลูกสร้าง: ')
+    province = input('(str) Which province do you want to scrape? bkk = กรุงเทพ, spk = สมุทรปราการ, pte = ปทุมธานี: ')
     urls = []
     if province == 'bkk':
         province_code = '%A1%C3%D8%A7%E0%B7%BE' # กรุงเทพ
