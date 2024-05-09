@@ -128,6 +128,10 @@ if __name__ == '__main__':
     # Define variables
     prefix = 'https://asset.led.go.th/newbid-old/asset_search_province.asp'
     asset_type_id = input('(str) Which asset type id do you want to scrape? 002 = ห้องชุด, 003 = ที่ดินพร้อมสิ่งปลูกสร้าง: ')
+    if asset_type_id == '002':
+        asset_type = 'condo'
+    elif asset_type_id == '003':
+        asset_type = 'house'
     province = input('(str) Which province do you want to scrape? bkk = กรุงเทพ, spk = สมุทรปราการ, pte = ปทุมธานี: ')
     urls = []
     if province == 'bkk':
@@ -165,7 +169,7 @@ if __name__ == '__main__':
     # # Define variables
     output_dir = 'Projects/led_scraping/output'
     gen_date = (datetime.now()).strftime('%Y%m%d')
-    output_filename = f'LED_SCRAPING_{province}_{asset_type_id}_{gen_date}.xlsx'
+    output_filename = f'LED_SCRAPING_{province.upper()}_{asset_type.upper()}_{gen_date}.xlsx'
 
     _ = scrape_data(urls, n_page, output_dir, output_filename)
 
