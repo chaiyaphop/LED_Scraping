@@ -134,7 +134,7 @@ if __name__ == '__main__':
         asset_type = 'house'
     province = input('(str) Which province do you want to scrape? bkk = กรุงเทพ, spk = สมุทรปราการ, pte = ปทุมธานี: ')
     urls = []
-    if province == 'bkk':
+    if province.lower() == 'bkk':
         province_code = '%A1%C3%D8%A7%E0%B7%BE' # กรุงเทพ
         # Select BKK civil
         civils = []
@@ -149,13 +149,13 @@ if __name__ == '__main__':
             sub_province_code = f'%E1%BE%E8%A7%A1%C3%D8%A7%E0%B7%BE%C1%CB%D2%B9%A4%C3%20{civil}'
             url = f'{prefix}?search_asset_type_id={asset_type_id}&search_province={province_code}&search_sub_province={sub_province_code}'
             urls.append(url)
-    elif province == 'spk':
+    elif province.lower() == 'spk':
         province_code = '%CA%C1%D8%B7%C3%BB%C3%D2%A1%D2%C3' # สมุทรปราการ
         civils = [0]
         print(f'Civil {civils}')
         url = f'{prefix}?search_asset_type_id={asset_type_id}&search_province={province_code}'
         urls.append(url)
-    elif province == 'pte':
+    elif province.lower() == 'pte':
         province_code = '%BB%B7%D8%C1%B8%D2%B9%D5' # ปทุมธานี
         civils = [0]
         print(f'Civil {civils}')
