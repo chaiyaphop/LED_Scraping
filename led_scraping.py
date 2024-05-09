@@ -48,7 +48,7 @@ def scrape_data(urls, n_page, output_dir, output_filename):
                 for tr in range(3, 53):
                     tr_onclick = driver.find_element(by=By.XPATH, value=f'/html/body/table[3]/tbody/tr/td[1]/table[1]/tbody/tr[2]/td/table/tbody/tr[{tr}]')
                     tr_onclick.click()
-                    time.sleep(3)
+                    time.sleep(1)
                     
                     result_windows = driver.window_handles[1]
                     driver.switch_to.window(result_windows)
@@ -166,7 +166,7 @@ if __name__ == '__main__':
     # # Define variables
     output_dir = 'Projects/led_scraping/output'
     gen_date = (datetime.now()).strftime('%Y%m%d')
-    output_filename = f'LED_{province}_SCRAPING_{gen_date}.xlsx'
+    output_filename = f'LED_{province}_{asset_type_id}_SCRAPING_{gen_date}.xlsx'
 
     _ = scrape_data(urls, n_page, output_dir, output_filename)
 
