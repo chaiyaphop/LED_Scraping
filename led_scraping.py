@@ -170,7 +170,7 @@ if __name__ == '__main__':
 
     # Scrape data
     # # Define variables
-    output_dir = 'Projects/led_scraping/output'
+    output_dir = 'output'
     gen_date = (datetime.now()).strftime('%Y%m%d')
     output_filename = f'LED_SCRAPING_{province.upper()}_{asset_type.upper()}_{gen_date}.xlsx'
 
