@@ -1,9 +1,11 @@
-from datetime import date, datetime
-from selenium import webdriver
-# from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.common.by import By
 import pandas as pd
 import time
+from datetime import (
+    date,
+    datetime
+)
+from selenium import webdriver
+from selenium.webdriver.common.by import By
 
 
 def find_n_page(urls, civils):
@@ -25,6 +27,7 @@ def find_n_page(urls, civils):
     driver.quit()
 
     return n_page
+
 
 def scrape_data(urls, n_page, output_dir, output_filename):
     # Set up the Chrome driver
