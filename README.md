@@ -14,7 +14,7 @@ This was tested on:
 ### Environment Setup
 
 ```bash
-sh setup.sh
+source setup.sh
 ```
 
 ### Run LED_Scraping

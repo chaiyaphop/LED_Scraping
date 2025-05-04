@@ -1,6 +1,7 @@
 # Ignore files
 ## Output files
 *.xlsx
+.DS_Store
 ## README.md for internal using
 MY_README.md
 ## Archive folder
