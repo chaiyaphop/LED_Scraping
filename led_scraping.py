@@ -1,3 +1,4 @@
+import os
 import pandas as pd
 import time
 from datetime import (
@@ -5,6 +6,7 @@ from datetime import (
     datetime
 )
 from selenium import webdriver
+from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.common.by import By
 
 
@@ -46,74 +48,77 @@ def scrape_data(urls, n_page, output_dir, output_filename):
         for page in range(1, int(n_page[c])+1):
             sub_url = f'{url}&page={page}'
             driver.get(sub_url)
-            time.sleep(0.5)
             try:
                 for tr in range(3, 53):
                     tr_onclick = driver.find_element(by=By.XPATH, value=f'/html/body/table[3]/tbody/tr/td[1]/table[1]/tbody/tr[2]/td/table/tbody/tr[{tr}]')
                     tr_onclick.click()
-                    time.sleep(1)
-                    
-                    result_windows = driver.window_handles[1]
-                    driver.switch_to.window(result_windows)
+                    try:
+                        target_windows = driver.window_handles[1]
+                        driver.switch_to.window(target_windows)
+                        for a in range(1, 7):
+                            current_url = driver.current_url
+                            land_deeds = driver.find_element(by=By.XPATH, value='/html/body/table/tbody/tr[3]/td/div/table/tbody/tr/td[2]/table/tbody/tr[5]/td/font')
+                            land_deed = land_deeds.text
+                            subdistricts = driver.find_element(by=By.XPATH, value='/html/body/table/tbody/tr[3]/td/div/table/tbody/tr/td[2]/table/tbody/tr[6]/td[1]/font')
+                            subdistrict = subdistricts.text
+                            districts = driver.find_element(by=By.XPATH, value='/html/body/table/tbody/tr[3]/td/div/table/tbody/tr/td[2]/table/tbody/tr[6]/td[2]/font')
+                            district = districts.text
+                            provinces = driver.find_element(by=By.XPATH, value='/html/body/table/tbody/tr[3]/td/div/table/tbody/tr/td[2]/table/tbody/tr[7]/td/font')
+                            province = provinces.text
+                            land_areas = driver.find_element(by=By.XPATH, value='/html/body/table/tbody/tr[3]/td/div/table/tbody/tr/td[2]/table/tbody/tr[8]/td[2]')
+                            land_area = land_areas.text
+                            land_owners = driver.find_element(by=By.XPATH, value='/html/body/table/tbody/tr[3]/td/div/table/tbody/tr/td[2]/table/tbody/tr[9]/td[1]/font')
+                            land_owner = land_owners.text
+                            sale_methods = driver.find_element(by=By.XPATH, value='/html/body/table/tbody/tr[3]/td/div/table/tbody/tr/td[2]/table/tbody/tr[18]/td/font')
+                            sale_method = sale_methods.text
+                            appraised_prices = driver.find_element(by=By.XPATH, value='/html/body/table/tbody/tr[3]/td/div/table/tbody/tr/td[2]/table/tbody/tr[20]/td/font')
+                            appraised_price = appraised_prices.text
+                            appointment_numbers = driver.find_element(by=By.XPATH, value=f'/html/body/table/tbody/tr[3]/td/div/table/tbody/tr/td[2]/table/tbody/tr[17]/td/table/tbody/tr[{a}]')
+                            appointment_number = appointment_numbers.text.split(' ')[1]
+                            appointment_dates = driver.find_element(by=By.XPATH, value=f'/html/body/table/tbody/tr[3]/td/div/table/tbody/tr/td[2]/table/tbody/tr[17]/td/table/tbody/tr[{a}]/td[1]/font')
+                            appointment_date = appointment_dates.text
+                            statuss = driver.find_element(by=By.XPATH, value=f'/html/body/table/tbody/tr[3]/td/div/table/tbody/tr/td[2]/table/tbody/tr[17]/td/table/tbody/tr[{a}]/td[2]')
+                            status = statuss.text
+                            try:
+                                maps_imgs = driver.find_element(by=By.XPATH, value='/html/body/table/tbody/tr[3]/td/div/table/tbody/tr/td[3]/table/tbody/tr[4]/td/div/a/img[@src]')
+                                maps_img = maps_imgs.get_attribute('src')
+                            except:
+                                maps_img = '-'
 
-                    for a in range(1, 7):
-                        result_url = driver.current_url
-                        land_deeds = driver.find_element(by=By.XPATH, value='/html/body/table/tbody/tr[3]/td/div/table/tbody/tr/td[2]/table/tbody/tr[5]/td/font')
-                        land_deed = land_deeds.text
-                        subdistricts = driver.find_element(by=By.XPATH, value='/html/body/table/tbody/tr[3]/td/div/table/tbody/tr/td[2]/table/tbody/tr[6]/td[1]/font')
-                        subdistrict = subdistricts.text
-                        districts = driver.find_element(by=By.XPATH, value='/html/body/table/tbody/tr[3]/td/div/table/tbody/tr/td[2]/table/tbody/tr[6]/td[2]/font')
-                        district = districts.text
-                        provinces = driver.find_element(by=By.XPATH, value='/html/body/table/tbody/tr[3]/td/div/table/tbody/tr/td[2]/table/tbody/tr[7]/td/font')
-                        province = provinces.text
-                        land_areas = driver.find_element(by=By.XPATH, value='/html/body/table/tbody/tr[3]/td/div/table/tbody/tr/td[2]/table/tbody/tr[8]/td[2]')
-                        land_area = land_areas.text
-                        land_owners = driver.find_element(by=By.XPATH, value='/html/body/table/tbody/tr[3]/td/div/table/tbody/tr/td[2]/table/tbody/tr[9]/td[1]/font')
-                        land_owner = land_owners.text
-                        sale_methods = driver.find_element(by=By.XPATH, value='/html/body/table/tbody/tr[3]/td/div/table/tbody/tr/td[2]/table/tbody/tr[18]/td/font')
-                        sale_method = sale_methods.text
-                        appraised_prices = driver.find_element(by=By.XPATH, value='/html/body/table/tbody/tr[3]/td/div/table/tbody/tr/td[2]/table/tbody/tr[20]/td/font')
-                        appraised_price = appraised_prices.text
-                        appointment_numbers = driver.find_element(by=By.XPATH, value=f'/html/body/table/tbody/tr[3]/td/div/table/tbody/tr/td[2]/table/tbody/tr[17]/td/table/tbody/tr[{a}]')
-                        appointment_number = appointment_numbers.text.split(' ')[1]
-                        appointment_dates = driver.find_element(by=By.XPATH, value=f'/html/body/table/tbody/tr[3]/td/div/table/tbody/tr/td[2]/table/tbody/tr[17]/td/table/tbody/tr[{a}]/td[1]/font')
-                        appointment_date = appointment_dates.text
-                        statuss = driver.find_element(by=By.XPATH, value=f'/html/body/table/tbody/tr[3]/td/div/table/tbody/tr/td[2]/table/tbody/tr[17]/td/table/tbody/tr[{a}]/td[2]')
-                        status = statuss.text
-                        try:
-                            maps_imgs = driver.find_element(by=By.XPATH, value='/html/body/table/tbody/tr[3]/td/div/table/tbody/tr/td[3]/table/tbody/tr[4]/td/div/a/img[@src]')
-                            maps_img = maps_imgs.get_attribute('src')
-                        except:
-                            maps_img = '-'
+                            data = {
+                                'URL': current_url,
+                                'ที่ดินโฉนดเลขที่': land_deed,
+                                'แขวง/ตำบล': subdistrict,
+                                'เขต/อำเภอ': district,
+                                'จังหวัด': province,
+                                'เนื้อที่': land_area,
+                                'ผู้ถือกรรมสิทธิ์': land_owner,
+                                'จะทำการขายโดย': sale_method,
+                                'ราคาประเมินของเจ้าพนักงานบังคับคดี': appraised_price,
+                                'นัดที่': appointment_number,
+                                'วันที่': appointment_date,
+                                'สถานะ': status,
+                                'แผนที่ตั้งทรัพย์': maps_img
+                            }
 
-                        data = {
-                            'URL': result_url,
-                            'ที่ดินโฉนดเลขที่': land_deed,
-                            'แขวง/ตำบล': subdistrict,
-                            'เขต/อำเภอ': district,
-                            'จังหวัด': province,
-                            'เนื้อที่': land_area,
-                            'ผู้ถือกรรมสิทธิ์': land_owner,
-                            'จะทำการขายโดย': sale_method,
-                            'ราคาประเมินของเจ้าพนักงานบังคับคดี': appraised_price,
-                            'นัดที่': appointment_number,
-                            'วันที่': appointment_date,
-                            'สถานะ': status,
-                            'แผนที่ตั้งทรัพย์': maps_img
-                        }
+                            data_list.append(data)
+                        
+                        driver.close()
+                        home_windows = driver.window_handles[0]
+                        driver.switch_to.window(home_windows)
+                    except WebDriverException as e:
+                        print(f"WebDriver error: {e}")
+                        driver.close()
+                        home_windows = driver.window_handles[0]
+                        driver.switch_to.window(home_windows)
+            except WebDriverException as e:
+                print(f"WebDriver error: {e}")
+                continue
 
-                        data_list.append(data)
-                    
-                    driver.close()
-
-                    home_windows = driver.window_handles[0]
-                    driver.switch_to.window(home_windows)
-                    time.sleep(0.1)
-            except:
-                None
         data_dict[c] = data_list
 
     # Write result file
+    os.makedirs(output_dir, exist_ok=True)
     with pd.ExcelWriter(f'{output_dir}/{output_filename}') as writer:
         for data in data_dict:
             df = pd.DataFrame(data_dict[data])
