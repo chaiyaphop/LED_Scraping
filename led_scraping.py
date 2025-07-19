@@ -61,10 +61,11 @@ def scrape_properties(urls, n_pages, output_dir, output_filename):
             total_pages = int(n_pages[civil])
 
             for page in tqdm(range(1, total_pages + 1), desc=f'CIVIL {civil}', unit='page'):
-                full_url = f'{url}&page={page}'
-                driver.get(full_url)
                 try:
-                    for tr_idx in range(3, 53):
+                    full_url = f'{url}&page={page}'
+                    driver.get(full_url)
+
+                    for tr_idx in tqdm(range(3, 53), desc=f'Page {page}', unit='row'):
                         try:
                             row = driver.find_element(by=By.XPATH, value=f'/html/body/table[3]/tbody/tr/td[1]/table[1]/tbody/tr[2]/td/table/tbody/tr[{tr_idx}]')
                             row.click()
@@ -76,14 +77,21 @@ def scrape_properties(urls, n_pages, output_dir, output_filename):
                                 try:
                                     return driver.find_element(by=By.XPATH, value=xpath).text.strip()
                                 except:
-                                    logging.warning(f"Text not found for row {tr_idx}, civil {civil}")
+                                    logging.warning(f"Text not found for row {tr_idx-2}, civil {civil}")
                                     return "-"
                             
-                            def get_image(xpath):
+                            def get_appointment_number(xpath):
+                                try:
+                                    return driver.find_element(By.XPATH, xpath).text.strip().split()[1]
+                                except:
+                                    logging.warning(f"Appointment number not found for row {tr_idx-2}, civil {civil}")
+                                    return "-"
+                            
+                            def get_map_image(xpath):
                                 try:
                                     return driver.find_element(by=By.XPATH, value=xpath).get_attribute('src')
                                 except:
-                                    logging.warning(f"Map image not found for row {tr_idx}, civil {civil}")
+                                    logging.warning(f"Map image not found for row {tr_idx-2}, civil {civil}")
                                     return "-"
 
                             for a in range(1, 7):
@@ -97,10 +105,10 @@ def scrape_properties(urls, n_pages, output_dir, output_filename):
                                     'ผู้ถือกรรมสิทธิ์': get_text('/html/body/table/tbody/tr[3]/td/div/table/tbody/tr/td[2]/table/tbody/tr[9]/td[1]/font'),
                                     'จะทำการขายโดย': get_text('/html/body/table/tbody/tr[3]/td/div/table/tbody/tr/td[2]/table/tbody/tr[18]/td/font'),
                                     'ราคาประเมินของเจ้าพนักงานบังคับคดี': get_text('/html/body/table/tbody/tr[3]/td/div/table/tbody/tr/td[2]/table/tbody/tr[20]/td/font'),
-                                    'นัดที่': get_text(f'/html/body/table/tbody/tr[3]/td/div/table/tbody/tr/td[2]/table/tbody/tr[17]/td/table/tbody/tr[{a}]').split(' ')[1],
+                                    'นัดที่': get_appointment_number(f'/html/body/table/tbody/tr[3]/td/div/table/tbody/tr/td[2]/table/tbody/tr[17]/td/table/tbody/tr[{a}]'),
                                     'วันที่': get_text(f'/html/body/table/tbody/tr[3]/td/div/table/tbody/tr/td[2]/table/tbody/tr[17]/td/table/tbody/tr[{a}]/td[1]/font'),
                                     'สถานะ': get_text(f'/html/body/table/tbody/tr[3]/td/div/table/tbody/tr/td[2]/table/tbody/tr[17]/td/table/tbody/tr[{a}]/td[2]'),
-                                    'แผนที่ตั้งทรัพย์': get_image('/html/body/table/tbody/tr[3]/td/div/table/tbody/tr/td[3]/table/tbody/tr[4]/td/div/a/img[@src]')
+                                    'แผนที่ตั้งทรัพย์': get_map_image('/html/body/table/tbody/tr[3]/td/div/table/tbody/tr/td[3]/table/tbody/tr[4]/td/div/a/img[@src]')
                                 }
 
                                 civil_data.append(data)
@@ -108,7 +116,7 @@ def scrape_properties(urls, n_pages, output_dir, output_filename):
                             driver.close()
                             driver.switch_to.window(driver.window_handles[0])
                         except WebDriverException as e:
-                            logging.warning(f"Skip row {tr_idx} due to error: {e}")
+                            logging.warning(f"Skip row {tr_idx-2} due to error: {e}")
                             if len(driver.window_handles) > 1:
                                 driver.close()
                                 driver.switch_to.window(driver.window_handles[0])
