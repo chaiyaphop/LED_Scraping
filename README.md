@@ -136,4 +136,5 @@ output/
 ## 🧑‍💻 Author
 
 Chaiyaphop Jamjumrat
+
 *Last updated: July 19, 2025*
