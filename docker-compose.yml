@@ -1,0 +1,10 @@
+version: '3.8'
+
+services:
+  led_scraper:
+    build: .
+    env_file:
+      - .env
+    volumes:
+      - ./output:/app/output
+    container_name: led_scraper
