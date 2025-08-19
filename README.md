@@ -51,11 +51,8 @@ Make sure Docker is installed on your system.
 ### 1. Build and run the Docker container manually:
 
 ```bash
-docker build -t led_scraper .
-docker run -it --rm \
-    -v "$(pwd)/output":/app/output \
-    --env-file .env \
-    led_scraper
+docker buildx build --platform=linux/amd64 -t led_scraper .
+docker run -it --rm -v "$(pwd)/output":/app/output --env-file .env --name running-led-scraper-app led_scraper
 ```
 
 ### 2. Or use `docker-compose`:

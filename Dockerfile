@@ -13,44 +13,37 @@ RUN apt-get update && apt-get install -y \
     unzip \
     curl \
     gnupg \
+    ca-certificates \
     xvfb \
     fonts-liberation \
-    libappindicator3-1 \
-    libasound2 \
-    libatk-bridge2.0-0 \
-    libnspr4 \
-    libnss3 \
-    libxss1 \
-    lsb-release \
     xdg-utils \
     --no-install-recommends && \
     rm -rf /var/lib/apt/lists/*
 
-# Install Chrome
-RUN wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
-    apt-get update && \
-    apt-get install -y ./google-chrome-stable_current_amd64.deb && \
-    rm google-chrome-stable_current_amd64.deb
-
-# Get Chrome version
-RUN CHROME_VERSION=$(google-chrome --version | grep -oP '\d+\.\d+\.\d+\.\d+') && \
-    echo "Chrome version: $CHROME_VERSION"
+# Install Google Chrome
+RUN wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /usr/share/keyrings/google-linux.gpg && \
+    echo "deb [arch=amd64 signed-by=/usr/share/keyrings/google-linux.gpg] http://dl.google.com/linux/chrome/deb/ stable main" \
+    > /etc/apt/sources.list.d/google-chrome.list && \
+    apt-get update && apt-get install -y google-chrome-stable && \
+    rm -rf /var/lib/apt/lists/*
 
 # Install matching ChromeDriver
-RUN CHROME_DRIVER_VERSION=$(curl -sS https://chromedriver.storage.googleapis.com/LATEST_RELEASE) && \
-    wget -q -O /tmp/chromedriver.zip https://chromedriver.storage.googleapis.com/$CHROME_DRIVER_VERSION/chromedriver_linux64.zip && \
-    unzip /tmp/chromedriver.zip -d /usr/local/bin/ && \
-    chmod +x /usr/local/bin/chromedriver && \
+RUN set -eux; \
+    CHROME_BIN=$(command -v google-chrome-stable); \
+    echo "Chrome binary: $CHROME_BIN"; \
+    CHROME_VERSION=$($CHROME_BIN --version | sed 's/Google Chrome //'); \
+    echo "Installed Chrome version: $CHROME_VERSION"; \
+    CHROME_MAJOR_VERSION=$(echo $CHROME_VERSION | cut -d. -f1); \
+    echo "Chrome major version: $CHROME_MAJOR_VERSION"; \
+    DRIVER_VERSION=$(curl -s "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_${CHROME_MAJOR_VERSION}"); \
+    echo "Matching ChromeDriver version: $DRIVER_VERSION"; \
+    wget -q -O /tmp/chromedriver.zip "https://chromedriver.storage.googleapis.com/${DRIVER_VERSION}/chromedriver_linux64.zip"; \
+    unzip /tmp/chromedriver.zip -d /usr/local/bin/; \
+    chmod +x /usr/local/bin/chromedriver; \
     rm /tmp/chromedriver.zip
 
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Optional: Load environment variables (used via `dotenv`)
-RUN pip install python-dotenv
-
-# Set environment variables (if you use .env)
-ENV PYTHONUNBUFFERED=1
-
-# Default run command (can override in docker-compose)
+# Define the default command
 CMD ["python", "led_scraping.py"]
