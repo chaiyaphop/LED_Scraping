@@ -22,7 +22,7 @@
 ## ⚙️ Setup Instructions
 
 <details>
-<summary><strong>Option 1: Local Python (Manual)</strong></summary>
+<summary><strong>Option 1: Local Python (Recommended)</strong></summary>
 
 Install dependencies using:
 
@@ -44,21 +44,15 @@ Make sure you have:
 </details>
 
 <details>
-<summary><strong>Option 2: Docker (Recommended)</strong></summary>
+<summary><strong>Option 2: Docker</strong></summary>
+
+Build the Docker container manually:
 
 Make sure Docker is installed on your system.
 
-### 1. Build and run the Docker container manually:
 
 ```bash
 docker buildx build --platform=linux/amd64 -t led_scraper .
-docker run -it --rm -v "$(pwd)/output":/app/output --env-file .env --name running-led-scraper-app led_scraper
-```
-
-### 2. Or use `docker-compose`:
-
-```bash
-docker-compose up --build
 ```
 
 </details>
@@ -72,12 +66,14 @@ You can skip manual input by creating a `.env` file in the project root:
 ```env
 ASSET_TYPE_ID=002       # 002 = condo, 003 = land/house
 PROVINCE=bkk            # bkk, spk, or pte
-CIVILS=1,2,...      # Only required if province = bkk
+CIVILS=1,2,...          # Only required if province = bkk
 ```
 
 ---
 
-## ▶️ How to Run
+## ▶️ How to Run (automated input)
+
+Make sure `.env` file is prepared, then:
 
 <details>
 <summary><strong>Run via Python</strong></summary>
@@ -86,14 +82,20 @@ CIVILS=1,2,...      # Only required if province = bkk
 python led_scraping.py
 ```
 
-Follow the prompts for asset type, province, and civil code.
+or follow the prompts for asset type, province, and civil code.
 
 </details>
 
 <details>
-<summary><strong>Run via Docker (automated input)</strong></summary>
+<summary><strong>Run via Docker</strong></summary>
 
-Make sure `.env` file is prepared, then:
+### 1. Run the Docker container manually:
+
+```bash
+docker run -it --rm -v "$(pwd)/output":/app/output --env-file .env --name running-led-scraper-app led_scraper
+```
+
+### 2. Or use `docker-compose`:
 
 ```bash
 docker-compose up --build
