@@ -144,12 +144,15 @@ if __name__ == '__main__':
     prefix = 'https://asset.led.go.th/newbid-old/asset_search_province.asp'
     asset_type_id = os.getenv('ASSET_TYPE_ID') or input('Asset type id (002 = ห้องชุด, 003 = ที่ดินพร้อมสิ่งปลูกสร้าง): ')
     asset_type = 'condo' if asset_type_id == '002' else 'house'
+    logging.info(f"Asset type: {asset_type}")
     province = os.getenv('PROVINCE') or input('Province (bkk = กรุงเทพ, spk = สมุทรปราการ, pte = ปทุมธานี): ').lower()
+    logging.info(f"Province: {province}")
 
     civils, urls = [], []
     if province == 'bkk':
         province_code = '%A1%C3%D8%A7%E0%B7%BE'
         civils_str = os.getenv('CIVILS')
+        logging.info(f"Civils: {civils_str}")
         if civils_str:
             civils = [int(c) for c in civils_str.split(',')]
         else:
